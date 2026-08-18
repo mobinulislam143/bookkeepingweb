@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { AlertTriangle } from "lucide-react";
+import { Button, Eyebrow, Icon } from "@/components/ds";
+import { Section } from "@/components/site/Section";
+import { BIZ } from "@/lib/business";
 
-export default function GlobalError({
+export default function Error({
   error,
   reset,
 }: {
@@ -16,20 +17,35 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-6 text-center">
-      <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center">
-        <AlertTriangle className="w-7 h-7 text-red-500" />
+    <Section tone="ivory" pad="clamp(72px,12vw,160px)" narrow>
+      <div style={{ display: "grid", gap: "var(--space-5)", justifyItems: "start" }}>
+        <Eyebrow rule>Something went wrong</Eyebrow>
+        <h1>This page didn’t load.</h1>
+        <p
+          style={{
+            fontSize: "var(--fs-body-lg)",
+            color: "var(--text-muted)",
+            lineHeight: "var(--lh-body)",
+            maxWidth: "var(--measure-lede)",
+          }}
+        >
+          Try again in a moment. If it keeps happening, call the office — we can take your details
+          over the phone.
+        </p>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", paddingTop: "var(--space-3)" }}>
+          <Button variant="accent" size="lg" onClick={reset}>
+            Try again
+          </Button>
+          <Button
+            variant="secondary"
+            size="lg"
+            href={BIZ.tel}
+            iconLeft={<Icon name="phone" size={17} />}
+          >
+            Call {BIZ.phone}
+          </Button>
+        </div>
       </div>
-      <h1 className="text-xl font-bold text-gray-900">Something went wrong</h1>
-      <p className="text-sm text-gray-500 max-w-sm">
-        An unexpected error occurred. Please try again or contact support if the issue persists.
-      </p>
-      <Button
-        onClick={reset}
-        className="h-10 px-6 bg-brand hover:bg-brand-dark text-white rounded-xl cursor-pointer"
-      >
-        Try again
-      </Button>
-    </div>
+    </Section>
   );
 }
