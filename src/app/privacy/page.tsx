@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Card, Eyebrow } from "@/components/ds";
-import { Section } from "@/components/site/Section";
+import { DocPage } from "@/components/layout/DocPage";
 import { BIZ } from "@/lib/business";
 
 export const metadata: Metadata = {
@@ -11,37 +10,25 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <Section tone="ivory" narrow pad="clamp(64px,9vw,120px)">
-      <div style={{ display: "grid", gap: "var(--space-5)" }}>
-        <Eyebrow rule>Legal</Eyebrow>
-        <h1 style={{ fontSize: "var(--fs-heading-1)" }}>Privacy Policy</h1>
-
-        <Card tone="paper" padding="md">
-          <p
-            style={{
-              fontSize: "var(--fs-body-sm)",
-              color: "var(--text-muted)",
-              lineHeight: "var(--lh-body)",
-            }}
-          >
-            Placeholder — this policy has not been drafted or reviewed yet. Replace this page with a
-            policy prepared for {BIZ.name} before the site goes live. Nothing here should be treated
-            as a binding statement.
-          </p>
-        </Card>
-
-        <div style={{ display: "grid", gap: "var(--space-5)", maxWidth: "var(--measure-prose)" }}>
-          <p style={{ fontSize: "var(--fs-body)", lineHeight: "var(--lh-body)", color: "var(--text-body)" }}>
-            The consultation form on this site collects the name, email address, phone number,
-            selected service, and message you choose to provide. That information is used to respond
-            to your request.
-          </p>
-          <p style={{ fontSize: "var(--fs-body)", lineHeight: "var(--lh-body)", color: "var(--text-body)" }}>
-            To ask a question about information you have sent, call {BIZ.phone} or write to{" "}
-            {BIZ.street}, {BIZ.cityLine}.
-          </p>
-        </div>
+    <DocPage eyebrow="Legal" title="Privacy Policy">
+      <div className="notice notice--error" style={{ background: "var(--accent-tint)", borderColor: "var(--accent-soft)", color: "var(--accent-ink)" }}>
+        <b>Draft notice.</b>
+        <span>
+          This policy has not been reviewed by counsel. Replace it with one prepared for
+          {" "}{BIZ.name} before the site goes live. Nothing here is a binding statement.
+        </span>
       </div>
-    </Section>
+      <h2>What the form collects</h2>
+      <p className="prose">
+        The consultation form on this site collects the name, email address, phone number, selected
+        service, and message you choose to provide. That information is used to respond to your
+        request.
+      </p>
+      <h2>Questions</h2>
+      <p className="prose">
+        To ask about information you have sent, call {BIZ.phone} or write to {BIZ.street},{" "}
+        {BIZ.cityLine}.
+      </p>
+    </DocPage>
   );
 }

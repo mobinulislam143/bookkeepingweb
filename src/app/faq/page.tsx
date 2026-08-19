@@ -1,45 +1,56 @@
 import type { Metadata } from "next";
-import { Accordion, Card, Eyebrow, type AccordionItem } from "@/components/ds";
-import { CTASection } from "@/components/site/CTASection";
-import { PageHero } from "@/components/site/PageHero";
-import { Section } from "@/components/site/Section";
+import { Accordion, Button, Icon, Reveal, type AccordionItem } from "@/components/ui";
+import { FinalCta } from "@/components/sections/Shared";
+import { BIZ } from "@/lib/business";
 
 export const metadata: Metadata = {
   title: "Frequently Asked Questions",
   description:
-    "General answers about bookkeeping, tax preparation, consultations, and what to bring — for clients in Jamaica, Queens and across New York.",
+    "General answers about our accounting, bookkeeping, tax, reporting and advisory services, how engagements are scoped, and how to get started.",
   alternates: { canonical: "/faq" },
   openGraph: {
-    title: "FAQ — Samadhan Bookkeeping & Tax",
-    description: "General answers about bookkeeping, tax preparation, and getting started.",
+    title: `FAQ — ${BIZ.name}`,
+    description: "General answers about our services, scope and how to get started.",
     url: "/faq",
   },
 };
 
-const GROUPS: { title: string; items: AccordionItem[] }[] = [
+const GROUPS: { no: string; title: string; id: string; items: AccordionItem[] }[] = [
   {
-    title: "Bookkeeping",
+    no: "01",
+    title: "Services",
+    id: "services",
     items: [
       {
-        q: "What does bookkeeping include?",
-        a: "Generally: categorizing your income and expenses, reconciling bank and card activity against your records, and producing a monthly summary. The exact scope depends on how your business operates, and we confirm it before starting.",
+        q: "What accounting services do you provide?",
+        a: "We provide accounting, bookkeeping, financial reporting, tax support, financial consulting, and business advisory services tailored to each client’s needs.",
       },
       {
-        q: "Who is bookkeeping for?",
-        a: "Small business owners, freelancers, and self-employed people who need a reliable record of their activity — especially anyone currently tracking things in a spreadsheet, an inbox, and a drawer at the same time.",
+        q: "Do you work with small businesses?",
+        a: "Yes. Our services can be structured around the needs of small businesses, growing companies, entrepreneurs, and established organizations.",
       },
       {
-        q: "When should I organize my books?",
-        a: "Sooner is easier. Monthly upkeep takes less time than annual reconstruction, and catching a discrepancy in March is simpler than finding it the following year.",
+        q: "Do you offer bookkeeping services?",
+        a: "Yes. Bookkeeping can be part of a broader accounting solution or provided as a standalone service.",
+      },
+      {
+        q: "Can you help with financial planning?",
+        a: "We provide practical financial guidance designed to help businesses understand their financial position and make informed decisions.",
       },
     ],
   },
   {
-    title: "Tax preparation",
+    no: "02",
+    title: "Tax and reporting",
+    id: "tax",
     items: [
       {
-        q: "Do you help individuals with taxes?",
-        a: "Yes. Individual tax preparation is part of what we do, including returns with self-employment or multiple income sources.",
+        q: "What does tax support cover?",
+        a: "Preparation and filing built on records that are already accurate, with a specific checklist of what to gather. It covers business and individual filings, including situations with self-employment or multiple income sources.",
+      },
+      {
+        q: "What does a monthly financial report contain?",
+        a: "At minimum: what came in, what went out, how the period compares to the last one, and anything unusual enough to raise. The exact format is agreed with you at the start.",
       },
       {
         q: "What documents will I need?",
@@ -52,28 +63,32 @@ const GROUPS: { title: string; items: AccordionItem[] }[] = [
     ],
   },
   {
+    no: "03",
     title: "Working together",
+    id: "working",
     items: [
       {
+        q: "How do I get started?",
+        a: "Start with a conversation about your business and financial needs. We’ll help determine which services make the most sense for you.",
+      },
+      {
         q: "What should I prepare before a consultation?",
-        a: "Whatever you already have: recent bank or card statements, income documents, last year’s return if applicable, and a rough sense of your expenses. If you are unsure what matters, that is a normal starting point.",
+        a: "Whatever you already have: recent bank or card statements, income documents, last year’s filing if applicable, and a rough sense of your expenses. If you are unsure what matters, that is a normal starting point.",
       },
       {
-        q: "Do you work with small businesses?",
-        a: "Yes — small businesses and new business owners are a large part of the practice, alongside individual clients.",
-      },
-      {
-        q: "How do we get started?",
-        a: "Call the office, or send the consultation form on the contact page. The first step is a short conversation about where your records stand and what is coming up.",
+        q: "How is the engagement scoped?",
+        a: "We confirm what we will handle, what we need from you, and when — before any work begins. The scope is written down rather than assumed.",
       },
     ],
   },
   {
+    no: "04",
     title: "Scope",
+    id: "scope",
     items: [
       {
         q: "What is outside your scope?",
-        a: "We do not advertise credentials, representation, or specialized services that have not been confirmed. If your situation calls for something beyond preparation and record-keeping, we will tell you directly.",
+        a: "We do not advertise credentials, representation, or specialized services that have not been confirmed. If your situation calls for something beyond accounting, reporting, tax support and advisory, we will tell you directly.",
       },
       {
         q: "Do you meet in person?",
@@ -86,44 +101,127 @@ const GROUPS: { title: string; items: AccordionItem[] }[] = [
 export default function FaqPage() {
   return (
     <>
-      <PageHero
-        eyebrow="FAQ"
-        title="Questions people actually ask"
-        lede="General answers about bookkeeping and tax preparation. Anything specific to your situation is a conversation, not a web page."
-        primary={{ label: "Schedule a Consultation", href: "/contact" }}
-        secondary={{ label: "See services", href: "/services" }}
-      />
-
-      <Section tone="white" narrow>
-        <div style={{ display: "grid", gap: "var(--space-8)" }}>
-          {GROUPS.map((g, i) => (
-            <div key={g.title} style={{ display: "grid", gap: "var(--space-5)" }}>
-              <h2 style={{ margin: 0, fontSize: "inherit", fontWeight: "inherit" }}>
-                <Eyebrow rule>{g.title}</Eyebrow>
-              </h2>
-              <Accordion items={g.items} defaultOpen={i === 0 ? 0 : -1} />
-            </div>
-          ))}
-
-          <Card tone="ivory" padding="md">
-            <p
+      <section className="section section--tight" aria-labelledby="faq-h">
+        <div className="container">
+          <Reveal y={12}>
+            <div
               style={{
-                fontSize: "var(--fs-body-sm)",
-                color: "var(--text-muted)",
-                lineHeight: "var(--lh-body)",
+                display: "flex",
+                alignItems: "baseline",
+                justifyContent: "space-between",
+                gap: 20,
+                borderBottom: "2px solid var(--ink-900)",
+                paddingBottom: 16,
+                marginBottom: "clamp(26px, 3.4vw, 44px)",
               }}
             >
-              These answers are general information about our services, not tax or legal advice. Your
-              circumstances may change what applies.
-            </p>
-          </Card>
-        </div>
-      </Section>
+              <p className="meta meta--accent">Frequently asked</p>
+              <p className="meta">Services · Scope · Getting started</p>
+            </div>
+          </Reveal>
 
-      <CTASection
-        title="Still have a question?"
-        lede="Call, or send it through the form. A short answer beats guessing."
-      />
+          <div className="split split--wide-left split--top" style={{ alignItems: "end" }}>
+            <Reveal>
+              <h1 id="faq-h" className="mega" style={{ fontSize: "clamp(2.5rem, 6.4vw, 5.25rem)" }}>
+                Questions people
+                <br />
+                actually ask
+                <span style={{ color: "var(--accent-ink)" }}>.</span>
+              </h1>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <p className="lede">
+General answers about how we work and what the services cover. Anything specific
+                to your business is a conversation, not a web page.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Index on the left, answers on the right. */}
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container faq-layout">
+          <aside className="faq-aside">
+            <nav aria-label="Question groups" style={{ display: "grid", gap: 2 }}>
+              {GROUPS.map((g) => (
+                <a
+                  key={g.id}
+                  href={`#${g.id}`}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "34px 1fr",
+                    gap: 12,
+                    alignItems: "baseline",
+                    padding: "11px 0",
+                    borderTop: "1px solid var(--border)",
+                    color: "var(--text-muted)",
+                    textDecoration: "none",
+                  }}
+                >
+                  <span
+                    className="num"
+                    style={{ fontSize: "var(--fs-meta)", letterSpacing: "0.1em", color: "var(--accent-ink)" }}
+                  >
+                    {g.no}
+                  </span>
+                  <span style={{ fontSize: "var(--fs-body)" }}>{g.title}</span>
+                </a>
+              ))}
+            </nav>
+
+            <div className="card card--tint" style={{ marginTop: 28, display: "grid", gap: 14 }}>
+              <p className="meta" style={{ color: "var(--accent-ink)" }}>
+                Still not answered?
+              </p>
+              <p style={{ fontSize: "var(--fs-sm)", color: "var(--ink-800)" }}>
+                A short answer beats guessing. Call the office or send it through the form.
+              </p>
+              <div style={{ display: "grid", gap: 10 }}>
+                <Button href={BIZ.tel} size="sm" iconLeft={<Icon name="phone" size={15} />}>
+                  {BIZ.phone}
+                </Button>
+                <Button href="/contact" variant="outline" size="sm">
+                  Get Started
+                </Button>
+              </div>
+            </div>
+          </aside>
+
+          <div style={{ display: "grid", gap: "clamp(36px, 5vw, 64px)", minWidth: 0 }}>
+            {GROUPS.map((g) => (
+              <section key={g.id} id={g.id} aria-labelledby={`${g.id}-h`} style={{ scrollMarginTop: 100 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: 16,
+                    marginBottom: 8,
+                  }}
+                >
+                  <span
+                    className="num"
+                    style={{ fontSize: "var(--fs-meta)", letterSpacing: "var(--ls-meta)", color: "var(--accent-ink)" }}
+                  >
+                    {g.no}
+                  </span>
+                  <h2 id={`${g.id}-h`} style={{ fontSize: "var(--fs-h3)" }}>
+                    {g.title}
+                  </h2>
+                </div>
+                <Accordion items={g.items} defaultOpen={0} />
+              </section>
+            ))}
+
+            <p className="meta" style={{ textTransform: "none", letterSpacing: "0.01em", lineHeight: 1.65 }}>
+              These answers are general information about our services, not tax or legal advice.
+              Your circumstances may change what applies.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <FinalCta title="Still have a question?" lede="Call, or send it through the form. A short answer beats guessing." />
     </>
   );
 }

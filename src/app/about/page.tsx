@@ -1,207 +1,224 @@
 import type { Metadata } from "next";
-import {
-  Card,
-  ContactRow,
-  Icon,
-  ImagePlaceholder,
-  Photo,
-  RatingBadge,
-  Reveal,
-  SectionHeading,
-} from "@/components/ds";
-import { CTASection } from "@/components/site/CTASection";
-import { PageHero } from "@/components/site/PageHero";
-import { Section } from "@/components/site/Section";
+import Image from "next/image";
+import { Button, Icon, Photo, Reveal, Stagger, StaggerItem } from "@/components/ui";
+import { FinalCta, LocalSection, Proof } from "@/components/sections/Shared";
 import { BIZ } from "@/lib/business";
 import { IMAGES } from "@/lib/images";
 
 export const metadata: Metadata = {
-  title: "About the Practice",
+  title: "About the Firm",
   description:
-    "Samadhan Bookkeeping & Tax is a local bookkeeping and tax practice on Midland Parkway in Jamaica, Queens, serving small businesses and individuals across New York.",
+    "An accounting and financial advisory firm on Midland Parkway in Jamaica, Queens, serving businesses across New York with accounting, reporting, tax and advisory services.",
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About — Samadhan Bookkeeping & Tax",
-    description: "A bookkeeping and tax practice on Midland Parkway in Jamaica, Queens.",
+    title: `About — ${BIZ.name}`,
+    description: "An accounting and financial advisory firm in Jamaica, Queens.",
     url: "/about",
   },
 };
 
 const COMMITMENTS: [string, string][] = [
-  ["Local service", "An office in the neighborhood, reachable by phone or in person."],
-  ["Personalized support", "The same person handles your file and answers your questions."],
-  ["Professional approach", "Careful records, consistent categorization, documented work."],
-  ["Clear communication", "Specific requests, plain answers, no surprise jargon."],
+  ["Local", "An office on Midland Parkway, not a call center. Meet in person or handle it by phone."],
+  ["Personal", "You deal with the same person who knows your file."],
+  ["Clear", "Specific asks, plain answers, and no jargon for its own sake."],
+  ["Careful", "Small discrepancies get caught while they are still small."],
 ];
 
 export default function AboutPage() {
   return (
     <>
-      <PageHero
-        eyebrow="About"
-        title="A bookkeeping practice on Midland Parkway"
-        lede="Samadhan Bookkeeping & Tax is a local practice in Jamaica, Queens, helping small businesses and individuals keep their financial records organized and their filings straightforward."
-        primary={{ label: "Schedule a Consultation", href: "/contact" }}
-        secondary={{ label: "See services", href: "/services" }}
-        aside={
-          <Photo
+      {/* A statement, set large, with the practice named underneath it. */}
+      <section className="section section--tight" aria-labelledby="about-h">
+        <div className="container">
+          <Reveal y={12}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                justifyContent: "space-between",
+                gap: 20,
+                borderBottom: "2px solid var(--ink-900)",
+                paddingBottom: 16,
+                marginBottom: "clamp(28px, 4vw, 56px)",
+              }}
+            >
+              <p className="meta meta--accent">About the firm</p>
+              <p className="meta">Jamaica, Queens · New York</p>
+            </div>
+          </Reveal>
+
+          <Reveal>
+            <h1 id="about-h" className="mega" style={{ maxWidth: "17ch" }}>
+              Accounting Expertise With a Business-Minded Approach
+            </h1>
+          </Reveal>
+
+          <Reveal delay={0.08}>
+            <div
+              className="split"
+              style={{ marginTop: "clamp(32px, 4vw, 56px)", alignItems: "start", gap: "clamp(28px, 5vw, 80px)" }}
+            >
+              <p className="lede" style={{ maxWidth: "none" }}>
+                We believe accounting should do more than record what happened. It should help you
+                understand where your business stands, where it is going, and what decisions can
+                move it forward.
+              </p>
+              <p className="prose">
+                Our approach combines accurate financial management with practical business
+                insight, giving clients the clarity they need to operate confidently and plan for
+                sustainable growth.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Full-bleed portrait band. */}
+      <div className="band">
+        <div className="band__figure" style={{ aspectRatio: "21/8" }}>
+          <Image
             src={IMAGES.aboutPortrait.src}
             alt={IMAGES.aboutPortrait.alt}
-            ratio="4/5"
+            fill
+            sizes="100vw"
             priority
-            sizes="(max-width: 1024px) 100vw, 45vw"
-            position="center 30%"
+            placeholder="blur"
+            style={{ objectFit: "cover", objectPosition: "center 32%" }}
           />
-        }
-      />
+        </div>
+      </div>
 
-      <Section tone="white">
-        <div
-          className="two-col"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0,.8fr) minmax(0,1.2fr)",
-            gap: "var(--space-8)",
-            alignItems: "start",
-          }}
-        >
-          <SectionHeading eyebrow="Approach" title="Organized first, everything else follows" />
-          <div style={{ display: "grid", gap: "var(--space-5)", maxWidth: "var(--measure-prose)" }}>
-            <Reveal>
-              <p
-                style={{
-                  fontSize: "var(--fs-body-lg)",
-                  lineHeight: "var(--lh-body)",
-                  color: "var(--text-body)",
-                }}
-              >
-                The work starts with getting records in order. Once the information is current and
-                consistent, the rest — reports, filings, decisions about the next few months —
-                becomes ordinary instead of stressful.
-              </p>
-            </Reveal>
-            <Reveal delay={70}>
-              <p
-                style={{
-                  fontSize: "var(--fs-body)",
-                  lineHeight: "var(--lh-body)",
-                  color: "var(--text-muted)",
-                }}
-              >
-                We work with local business owners, freelancers, and individuals across Queens. Most
-                people come to us mid-problem: months behind, unsure what is deductible, or facing a
-                filing deadline with records in three places. The first conversation is about where
-                things actually stand, not where they should have been.
-              </p>
-            </Reveal>
-            <Reveal delay={140}>
+      {/* Approach, set as a wide editorial column with a photograph beside it. */}
+      <section className="section" aria-labelledby="approach-h">
+        <div className="container">
+          <div className="split split--wide-left split--top" style={{ gap: "clamp(32px, 5vw, 88px)" }}>
+            <div className="stack">
+              <Reveal as="span" y={10}>
+                <p className="meta meta--accent">Approach</p>
+              </Reveal>
+              <Reveal>
+                <h2 id="approach-h" className="display">
+                  Accurate first.
+                  <br />
+                  Useful second.
+                </h2>
+              </Reveal>
+              <Reveal delay={0.06}>
+                <p className="prose">
+                  Most clients come to us mid-problem: months behind, unsure what a number
+                  represents, or facing a deadline with records in three places. The first
+                  conversation is about where things actually stand, not where they should have
+                  been.
+                </p>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <p className="prose">
+                  From there the work is unglamorous and cumulative — statements matched to
+                  records, expenses categorized the same way each month, a report at the end of it
+                  that gets read rather than filed. Done consistently, that is what makes a
+                  business legible to a lender, to a filing, and to the person running it.
+                </p>
+              </Reveal>
+              <Reveal delay={0.14}>
+                <div
+                  className="card"
+                  style={{ background: "var(--cool)", borderStyle: "dashed", width: "100%" }}
+                >
+                  <p style={{ fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>
+                    <b style={{ color: "var(--ink-900)" }}>To be supplied.</b> Team background,
+                    professional credentials and years in practice belong here once confirmed. We
+                    do not publish claims we cannot back up, so the space stays empty until the
+                    firm supplies them.
+                  </p>
+                </div>
+              </Reveal>
+            </div>
+
+            <Reveal delay={0.08} style={{ width: "100%", display: "grid", gap: 20 }}>
               <Photo
                 src={IMAGES.aboutWorkspace.src}
                 alt={IMAGES.aboutWorkspace.alt}
-                ratio="16/9"
-                sizes="(max-width: 1024px) 100vw, 60vw"
+                ratio="4/5"
+                sizes="(max-width: 900px) 100vw, 40vw"
+              />
+              <Photo
+                src={IMAGES.clientRelationship.src}
+                alt={IMAGES.clientRelationship.alt}
+                ratio="4/3"
+                sizes="(max-width: 900px) 100vw, 40vw"
               />
             </Reveal>
-            <Reveal delay={210}>
-              <Card tone="ivory" padding="md">
-                <p
+          </div>
+        </div>
+      </section>
+
+      {/* Commitments as oversized numbered rows, not a card grid. */}
+      <section className="section section--alt" aria-labelledby="commit-h">
+        <div className="container">
+          <div style={{ borderTop: "2px solid var(--ink-900)", paddingTop: 18, marginBottom: 28 }}>
+            <p className="meta meta--accent">What guides the work</p>
+          </div>
+          <Reveal>
+            <h2 id="commit-h" className="display" style={{ marginBottom: "clamp(24px, 3vw, 44px)" }}>
+              Four commitments.
+            </h2>
+          </Reveal>
+
+          <Stagger step={0.06}>
+            <ul style={{ listStyle: "none", margin: 0, padding: 0, borderTop: "1px solid var(--border)" }}>
+              {COMMITMENTS.map(([title, body], i) => (
+                <StaggerItem
+                  as="li"
+                  key={title}
                   style={{
-                    fontSize: "var(--fs-body-sm)",
-                    color: "var(--text-muted)",
-                    lineHeight: "var(--lh-body)",
+                    display: "grid",
+                    gridTemplateColumns: "minmax(0, 64px) minmax(0, 1fr) minmax(0, 1.4fr)",
+                    gap: "clamp(14px, 3vw, 44px)",
+                    alignItems: "baseline",
+                    padding: "clamp(18px, 2.4vw, 30px) 0",
+                    borderBottom: "1px solid var(--border)",
                   }}
                 >
-                  Placeholder: owner background, credentials, and how long the practice has served
-                  Queens will go here once confirmed. We are not filling this space with claims we
-                  cannot back up.
-                </p>
-              </Card>
-            </Reveal>
-          </div>
-        </div>
-      </Section>
-
-      <Section tone="ivory">
-        <div style={{ display: "grid", gap: "var(--space-7)" }}>
-          <SectionHeading eyebrow="What guides the work" title="Four commitments" />
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))",
-              gap: "var(--space-4)",
-            }}
-          >
-            {COMMITMENTS.map(([t, b], i) => (
-              <Reveal key={t} delay={(i % 4) * 70}>
-                <Card padding="md" style={{ display: "grid", gap: 8, height: "100%", alignContent: "start" }}>
-                  <h3 style={{ fontSize: "var(--fs-heading-3)" }}>{t}</h3>
-                  <p
+                  <span
+                    className="num"
+                    style={{ fontSize: "var(--fs-meta)", letterSpacing: "var(--ls-meta)", color: "var(--accent-ink)" }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span
                     style={{
-                      fontSize: "var(--fs-body-sm)",
-                      color: "var(--text-muted)",
-                      lineHeight: "var(--lh-body)",
+                      fontSize: "clamp(1.375rem, 2.6vw, 2rem)",
+                      fontWeight: 600,
+                      letterSpacing: "-0.03em",
+                      color: "var(--ink-900)",
                     }}
                   >
-                    {b}
-                  </p>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </Section>
+                    {title}
+                  </span>
+                  <span className="prose" style={{ fontSize: "var(--fs-sm)" }}>
+                    {body}
+                  </span>
+                </StaggerItem>
+              ))}
+            </ul>
+          </Stagger>
 
-      <Section tone="white">
-        <div
-          className="two-col"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)",
-            gap: "var(--space-8)",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ display: "grid", gap: "var(--space-5)" }}>
-            <SectionHeading
-              eyebrow="Local"
-              title="Serving Jamaica, Queens"
-              lede="Midland Parkway, minutes from the Jamaica hub. Clients come from across Queens and the surrounding boroughs."
-            />
-            <div style={{ display: "grid", gap: "var(--space-4)", maxWidth: 340 }}>
-              <ContactRow
-                icon={<Icon name="map-pin" size={16} />}
-                label="Office"
-                value={
-                  <>
-                    {BIZ.street}
-                    <br />
-                    {BIZ.cityLine}
-                  </>
-                }
-              />
-              <ContactRow
-                icon={<Icon name="phone" size={16} />}
-                label="Phone"
-                value={BIZ.phone}
-                href={BIZ.tel}
-                note="Click to call"
-              />
+          <Reveal delay={0.1}>
+            <div className="row" style={{ marginTop: "clamp(28px, 3.4vw, 44px)" }}>
+              <Button href="/services" iconRight={<Icon name="arrow-right" size={17} />}>
+                Explore Our Services
+              </Button>
+              <Button href={BIZ.tel} variant="outline" iconLeft={<Icon name="phone" size={16} />}>
+                {BIZ.phone}
+              </Button>
             </div>
-            <RatingBadge rating={BIZ.rating} reviewCount={BIZ.reviews} style={{ justifySelf: "start" }} />
-          </div>
-
-          {/* No neighborhood photograph was supplied, so the slot states that
-              plainly rather than substituting an unrelated interior shot. */}
-          <ImagePlaceholder
-            ratio="4/3"
-            label="Jamaica / Queens neighborhood photo"
-            note="Storefront, Midland Parkway, or the surrounding blocks — daylight, documentary. Drop the file into assets/image and swap this for <Photo />."
-            alt="Neighborhood photograph of Jamaica, Queens, to be supplied"
-          />
+          </Reveal>
         </div>
-      </Section>
+      </section>
 
-      <CTASection />
+      <LocalSection />
+      <Proof />
+      <FinalCta />
     </>
   );
 }

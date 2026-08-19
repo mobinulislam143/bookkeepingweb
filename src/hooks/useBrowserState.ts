@@ -23,6 +23,21 @@ export function useMediaQuery(query: string, serverFallback = false): boolean {
   );
 }
 
+const noopSubscribe = () => () => {};
+
+/**
+ * False while rendering on the server and during hydration, true afterwards.
+ * Lets a component wait for the real client environment — a resolved media
+ * query, a measured viewport — without setting state from an effect.
+ */
+export function useHydrated(): boolean {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false
+  );
+}
+
 function subscribeToScroll(onChange: () => void) {
   window.addEventListener("scroll", onChange, { passive: true });
   return () => window.removeEventListener("scroll", onChange);

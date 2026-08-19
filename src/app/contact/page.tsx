@@ -1,164 +1,139 @@
 import type { Metadata } from "next";
-import { Button, ContactRow, Eyebrow, Icon, RatingBadge, SectionHeading } from "@/components/ds";
-import { ContactForm } from "@/components/site/ContactForm";
-import { PageHero } from "@/components/site/PageHero";
-import { Section } from "@/components/site/Section";
+import { Icon, Photo, Reveal } from "@/components/ui";
+import { ContactForm } from "@/components/sections/ContactForm";
+import { LocalSection } from "@/components/sections/Shared";
 import { BIZ } from "@/lib/business";
+import { IMAGES } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Contact — Schedule a Consultation",
   description:
-    "Call (347) 444-3222 or request a consultation. Samadhan Bookkeeping & Tax is at 86-75 Midland Pkwy, Jamaica, NY 11432.",
+    "Schedule a consultation with our accounting and advisory team. Call (347) 444-3222 or send a short note about your business and financial needs.",
   alternates: { canonical: "/contact" },
   openGraph: {
-    title: "Contact — Samadhan Bookkeeping & Tax",
-    description: "Call (347) 444-3222 or request a consultation in Jamaica, Queens.",
+    title: `Contact — ${BIZ.name}`,
+    description: "Schedule a consultation with our accounting and advisory team.",
     url: "/contact",
   },
 };
 
-const MAP_QUERY = encodeURIComponent(`${BIZ.street}, ${BIZ.cityLine}`);
-
 export default function ContactPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Contact"
-        title="Let's talk about your books"
-        lede="Call, or send a short note about your situation. We are on Midland Parkway in Jamaica, Queens, and we work with clients in person and by phone."
-        meta={
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <Button
-              variant="accent"
-              size="lg"
-              href={BIZ.tel}
-              iconLeft={<Icon name="phone" size={17} />}
-            >
-              Call {BIZ.phone}
-            </Button>
-            <Button variant="secondary" size="lg" href="#form">
-              Use the form
-            </Button>
-          </div>
-        }
-      />
-
-      <Section tone="white">
-        <div
-          className="two-col"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0,.75fr) minmax(0,1.25fr)",
-            gap: "var(--space-8)",
-            alignItems: "start",
-          }}
-        >
-          <div style={{ display: "grid", gap: "var(--space-5)", alignContent: "start" }}>
-            <h2 style={{ margin: 0, fontSize: "inherit", fontWeight: "inherit" }}>
-              <Eyebrow rule>Details</Eyebrow>
-            </h2>
-            <strong
-              style={{
-                fontSize: "var(--fs-body-lg)",
-                fontWeight: "var(--fw-medium)",
-                color: "var(--text-strong)",
-              }}
-            >
-              {BIZ.name}
-            </strong>
-            <div style={{ display: "grid", gap: "var(--space-4)" }}>
-              <ContactRow
-                icon={<Icon name="map-pin" size={16} />}
-                label="Address"
-                value={
-                  <>
-                    {BIZ.street}
-                    <br />
-                    {BIZ.cityLine}
-                  </>
-                }
-              />
-              <ContactRow
-                icon={<Icon name="phone" size={16} />}
-                label="Phone"
-                value={BIZ.phone}
-                href={BIZ.tel}
-                note="Click to call"
-              />
-              <ContactRow
-                icon={<Icon name="clock" size={16} />}
-                label="Hours"
-                value="By appointment"
-                note="Exact hours to be confirmed — placeholder"
-              />
-            </div>
-            <RatingBadge rating={BIZ.rating} reviewCount={BIZ.reviews} style={{ justifySelf: "start" }} />
-          </div>
-
-          <div id="form" style={{ scrollMarginTop: 90 }}>
-            <ContactForm />
-          </div>
-        </div>
-      </Section>
-
-      <Section tone="ivory">
-        <div style={{ display: "grid", gap: "var(--space-5)" }}>
-          <SectionHeading
-            eyebrow="Getting here"
-            title={`${BIZ.street}, ${BIZ.cityLine}`}
-            lede="Street parking on Midland Parkway; a short drive from the Jamaica transit hub."
-          />
-          <div
-            style={{
-              position: "relative",
-              borderRadius: "var(--radius-lg)",
-              overflow: "hidden",
-              border: "1px solid var(--border-soft)",
-              background: "var(--ivory-200)",
-            }}
-          >
-            <iframe
-              title={`Map showing ${BIZ.name} at ${BIZ.street}, ${BIZ.cityLine}`}
-              src={`https://www.google.com/maps?q=${MAP_QUERY}&output=embed`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              style={{ display: "block", width: "100%", aspectRatio: "21/9", border: 0 }}
-            />
+      <section className="section section--tight" aria-labelledby="contact-h">
+        <div className="container">
+          <Reveal y={12}>
             <div
               style={{
-                position: "absolute",
-                left: "var(--space-5)",
-                bottom: "var(--space-5)",
-                background: "var(--white)",
-                borderRadius: "var(--radius-md)",
-                border: "1px solid var(--border-hairline)",
-                boxShadow: "var(--shadow-md)",
-                padding: "var(--space-4) var(--space-5)",
-                display: "grid",
-                gap: 4,
-                maxWidth: "calc(100% - var(--space-8))",
+                display: "flex",
+                alignItems: "baseline",
+                justifyContent: "space-between",
+                gap: 20,
+                borderBottom: "2px solid var(--ink-900)",
+                paddingBottom: 16,
+                marginBottom: "clamp(26px, 3.4vw, 44px)",
               }}
             >
-              <span
-                style={{
-                  font: "var(--text-style-eyebrow)",
-                  letterSpacing: "var(--ls-eyebrow)",
-                  textTransform: "uppercase",
-                  color: "var(--text-accent)",
-                }}
-              >
-                Office
-              </span>
-              <span style={{ fontSize: "var(--fs-body-sm)", color: "var(--text-strong)" }}>
-                {BIZ.street}, {BIZ.cityLine}
-              </span>
-              <a href={BIZ.tel} style={{ fontSize: "var(--fs-body-sm)" }}>
-                {BIZ.phone}
-              </a>
+              <p className="meta meta--accent">Contact</p>
+              <p className="meta">Reply within one business day</p>
             </div>
-          </div>
+          </Reveal>
+
+          <Reveal>
+            <h1 id="contact-h" className="mega" style={{ fontSize: "clamp(2.5rem, 6.2vw, 5.25rem)", maxWidth: "15ch" }}>
+              Let’s talk about your business
+              <span style={{ color: "var(--accent-ink)" }}>.</span>
+            </h1>
+          </Reveal>
         </div>
-      </Section>
+      </section>
+
+      <section className="section" style={{ paddingTop: 0 }} aria-label="Contact details and form">
+        <div className="container contact-layout">
+          <div style={{ display: "grid", gap: 28, minWidth: 0 }}>
+            <Reveal>
+              <p className="lede" style={{ maxWidth: "none" }}>
+Tell us about your business and where your financial records stand. We will help
+                determine which services make sense — and say so if none of them do.
+              </p>
+            </Reveal>
+
+            <Reveal delay={0.06}>
+              <div>
+                <p className="meta meta--accent" style={{ marginBottom: 6 }}>
+                  Details
+                </p>
+                <div className="detail-row">
+                  <Icon name="map-pin" size={18} />
+                  <span style={{ display: "grid", gap: 3 }}>
+                    <span className="meta">Office</span>
+                    <address style={{ fontStyle: "normal", color: "var(--ink-900)", lineHeight: 1.6 }}>
+                      {BIZ.street}
+                      <br />
+                      {BIZ.cityLine}
+                    </address>
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <Icon name="phone" size={18} />
+                  <span style={{ display: "grid", gap: 3 }}>
+                    <span className="meta">Phone</span>
+                    <a
+                      href={BIZ.tel}
+                      className="num"
+                      style={{ color: "var(--ink-900)", fontSize: "var(--fs-lede)", fontWeight: 600 }}
+                    >
+                      {BIZ.phone}
+                    </a>
+                    <span className="field__hint">Click to call</span>
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <Icon name="user" size={18} />
+                  <span style={{ display: "grid", gap: 3 }}>
+                    <span className="meta">Appointments</span>
+                    <span style={{ color: "var(--ink-900)" }}>By appointment</span>
+                    <span className="field__hint">Specific times confirmed when you book</span>
+                  </span>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.1}>
+              <Photo
+                src={IMAGES.process.src}
+                alt={IMAGES.process.alt}
+                ratio="4/3"
+                position="center 40%"
+                sizes="(max-width: 900px) 100vw, 38vw"
+              />
+            </Reveal>
+
+            <Reveal delay={0.14}>
+              <div style={{ display: "flex", alignItems: "flex-end", gap: 28 }}>
+                <span className="stat">
+                  <span className="stat__value" style={{ fontSize: "clamp(2rem, 3.4vw, 2.75rem)" }}>
+                    {BIZ.rating.toFixed(1)}
+                  </span>
+                  <span className="meta">Google rating</span>
+                </span>
+                <span className="stat">
+                  <span className="stars" style={{ fontSize: "0.95rem", marginBottom: 8 }}>
+                    ★★★★★
+                  </span>
+                  <span className="meta">{BIZ.reviews} reviews</span>
+                </span>
+              </div>
+            </Reveal>
+          </div>
+
+          <Reveal delay={0.08} x={16} y={0} style={{ width: "100%", minWidth: 0 }}>
+            <ContactForm />
+          </Reveal>
+        </div>
+      </section>
+
+      <LocalSection />
     </>
   );
 }

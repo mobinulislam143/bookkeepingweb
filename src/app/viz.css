@@ -1,0 +1,511 @@
+/* ==========================================================================
+   Visualization layer — the financial 3D and the scroll-driven diagrams.
+
+   All of it is CSS 3D: real perspective, real translateZ, composited on the
+   GPU. The subjects are flat sheets of paper, so a WebGL context would buy
+   nothing here and would cost a megabyte of JavaScript and a fallback path.
+   ========================================================================== */
+
+/* ── Shared paper surfaces ──────────────────────────────────────────────── */
+
+.sheet {
+  position: absolute;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-3);
+  padding: 5.5% 6%;
+  display: flex;
+  flex-direction: column;
+  gap: 8%;
+}
+
+.sheet--accent {
+  background: var(--ink-900);
+  border-color: var(--ink-800);
+  box-shadow: 0 10px 28px rgba(22, 25, 31, 0.22);
+  color: var(--white);
+}
+
+.sheet--gold {
+  background: var(--accent-tint);
+  border-color: var(--accent-soft);
+}
+
+.sheet__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.5rem, 0.72vw, 0.6875rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.sheet--accent .sheet__label {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Ruled lines standing in for record rows — never fabricated figures. */
+.sheet__lines {
+  display: grid;
+  gap: 7px;
+  flex: 1 1 auto;
+  align-content: center;
+}
+
+.sheet__line {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--ink-100);
+}
+
+.sheet--accent .sheet__line {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.sheet__line--key {
+  background: var(--ink-300);
+}
+
+.sheet--accent .sheet__line--key {
+  background: var(--accent);
+}
+
+.sheet__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 34%;
+}
+
+.sheet__bar {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  background: var(--cool-deep);
+  border-top: 2px solid var(--ink-400);
+}
+
+.sheet__bar--gold {
+  background: var(--accent-tint);
+  border-top-color: var(--accent);
+}
+
+/* ── Hero composition ───────────────────────────────────────────────────── */
+
+.doc3d {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  perspective: 1400px;
+  perspective-origin: 52% 44%;
+}
+
+.doc3d__plane {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.doc3d__item {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+/* Faint grid the documents are filed against — crisp lines, no wash. */
+.doc3d__grid {
+  position: absolute;
+  inset: -6% -4%;
+  background-image:
+    linear-gradient(to right, var(--ink-100) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ink-100) 1px, transparent 1px);
+  background-size: 11.111% 11.111%;
+  mask-image: radial-gradient(70% 62% at 50% 46%, #000 40%, transparent 100%);
+  transform: translateZ(-160px);
+}
+
+.doc3d__chip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-3);
+  font-family: var(--font-mono);
+  font-size: clamp(0.5rem, 0.72vw, 0.6875rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-900);
+  white-space: nowrap;
+}
+
+.doc3d__chip b {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  color: var(--ink-900);
+}
+
+@media (max-width: 900px) {
+  .doc3d {
+    aspect-ratio: 5 / 4;
+  }
+}
+
+/* On a phone the composition keeps its four documents and drops the status
+   chips — at this size they crowd the sheets instead of annotating them. */
+@media (max-width: 720px) {
+  .doc3d__chip {
+    display: none;
+  }
+
+  .sheet__label {
+    font-size: 0.5625rem;
+  }
+}
+
+/* ── Clarity rail (organize / record / understand) ──────────────────────── */
+
+.rail {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--border);
+}
+
+.rail__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: clamp(20px, 4vw, 64px);
+  align-items: center;
+  padding-block: clamp(28px, 3.6vw, 52px);
+  border-bottom: 1px solid var(--border);
+}
+
+.rail__no {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  letter-spacing: -0.03em;
+  color: var(--ink-300);
+  transition: color var(--t-slow) var(--ease);
+}
+
+.rail__row[data-on="true"] .rail__no {
+  color: var(--accent-ink);
+}
+
+.rail__title {
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: var(--fw-semibold);
+  color: var(--ink-300);
+  transition: color var(--t-slow) var(--ease);
+  margin: 0;
+}
+
+.rail__row[data-on="true"] .rail__title {
+  color: var(--ink-900);
+}
+
+/* The line that draws itself across the row as it activates. */
+.rail__row::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 620ms var(--ease-out);
+}
+
+.rail__row[data-on="true"]::after {
+  transform: scaleX(1);
+}
+
+@media (max-width: 760px) {
+  .rail__row {
+    grid-template-columns: auto 1fr;
+    gap: 16px 20px;
+  }
+
+  .rail__body {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── Ledger board ───────────────────────────────────────────────────────── */
+
+.ledger {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  box-shadow: var(--shadow-3);
+  overflow: hidden;
+}
+
+.ledger__head,
+.ledger__row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1.1fr) minmax(0, 2fr) minmax(0, auto);
+  gap: clamp(12px, 2vw, 32px);
+  align-items: center;
+  padding: 0 clamp(16px, 2.4vw, 30px);
+}
+
+.ledger__head {
+  height: 46px;
+  background: var(--cool);
+  border-bottom: 1px solid var(--border);
+}
+
+.ledger__row {
+  height: clamp(62px, 7vw, 82px);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--t-base) var(--ease);
+}
+
+.ledger__row:last-child {
+  border-bottom: 0;
+}
+
+.ledger__row[data-on="true"] {
+  background: var(--white);
+}
+
+.ledger__name {
+  font-size: clamp(1rem, 1.5vw, 1.3125rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.02em;
+  color: var(--ink-900);
+}
+
+/* The record track: a scattered set of marks that slides into alignment. */
+.ledger__track {
+  position: relative;
+  height: 12px;
+}
+
+.ledger__mark {
+  position: absolute;
+  top: 50%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ink-200);
+  transition:
+    transform 720ms var(--ease-out),
+    background 460ms var(--ease),
+    width 720ms var(--ease-out);
+}
+
+.ledger__row[data-on="true"] .ledger__mark {
+  background: var(--ink-700);
+}
+
+.ledger__row[data-on="true"] .ledger__mark--gold {
+  background: var(--accent);
+}
+
+.ledger__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+  transition: color var(--t-base) var(--ease);
+}
+
+.ledger__row[data-on="true"] .ledger__status {
+  color: var(--green-700);
+}
+
+.ledger__check {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  display: grid;
+  place-items: center;
+  color: transparent;
+  transition:
+    background var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.ledger__row[data-on="true"] .ledger__check {
+  background: var(--green-700);
+  border-color: var(--green-700);
+  color: var(--white);
+}
+
+@media (max-width: 760px) {
+  .ledger__head {
+    display: none;
+  }
+
+  /* Explicit areas: auto-placement would push the status onto its own row and
+     collapse the third column to zero. */
+  .ledger__row {
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "no name status"
+      "track track track";
+    height: auto;
+    padding-block: 18px;
+    row-gap: 14px;
+    column-gap: 12px;
+  }
+
+  .ledger__row > *:nth-child(1) {
+    grid-area: no;
+  }
+
+  .ledger__row > *:nth-child(2) {
+    grid-area: name;
+  }
+
+  .ledger__row > *:nth-child(3) {
+    grid-area: track;
+  }
+
+  .ledger__row > *:nth-child(4) {
+    grid-area: status;
+  }
+}
+
+/* ── Scattered → organized ──────────────────────────────────────────────── */
+
+.transform-stage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  perspective: 1200px;
+}
+
+.transform-stage__plane {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.paper {
+  position: absolute;
+  width: 46%;
+  height: 30%;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-3);
+  padding: 4% 5%;
+  display: grid;
+  gap: 6px;
+  align-content: center;
+}
+
+.paper__tag {
+  font-family: var(--font-mono);
+  font-size: clamp(0.5rem, 0.8vw, 0.625rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.paper__line {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--ink-100);
+}
+
+/* ── Queens line system ─────────────────────────────────────────────────── */
+
+.queens {
+  width: 100%;
+  height: auto;
+}
+
+.queens path,
+.queens line {
+  vector-effect: non-scaling-stroke;
+}
+
+/* ── Vertical process timeline ──────────────────────────────────────────── */
+
+.timeline {
+  position: relative;
+  display: grid;
+  gap: 0;
+  padding-left: clamp(44px, 6vw, 88px);
+}
+
+.timeline__spine {
+  position: absolute;
+  left: clamp(16px, 2.2vw, 30px);
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.timeline__spine span {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform-origin: top center;
+}
+
+.timeline__step {
+  position: relative;
+  padding-block: clamp(24px, 3.4vw, 44px);
+  border-bottom: 1px solid var(--border);
+}
+
+.timeline__step:last-child {
+  border-bottom: 0;
+}
+
+.timeline__marker {
+  position: absolute;
+  left: calc(clamp(44px, 6vw, 88px) * -1 + clamp(16px, 2.2vw, 30px) - 9px);
+  top: clamp(30px, 3.8vw, 52px);
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--white);
+  border: 2px solid var(--border-strong);
+  transition:
+    background var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease),
+    transform var(--t-base) var(--ease);
+}
+
+.timeline__step[data-on="true"] .timeline__marker {
+  background: var(--accent);
+  border-color: var(--accent-strong);
+  transform: scale(1.15);
+}
+
+.timeline__no {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  letter-spacing: var(--ls-meta);
+  color: var(--text-faint);
+  transition: color var(--t-base) var(--ease);
+}
+
+.timeline__step[data-on="true"] .timeline__no {
+  color: var(--accent-ink);
+}

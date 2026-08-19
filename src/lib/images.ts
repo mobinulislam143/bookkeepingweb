@@ -17,27 +17,29 @@ import womanWorkingLaptopOffice from "@/assets/image/womanworkinglaptopoffice.jp
  * duotone, no generated substitutes. Alt text describes what the photo shows
  * rather than repeating the business name.
  *
- * Note: the brief also maps a `newyorkqueensstreet` photo to the Jamaica/Queens
- * section. That file was not among the supplied assets, so that one slot uses
- * ImagePlaceholder with its art direction until a real neighborhood photo
- * arrives. See the About page.
+ * Note: the brief maps a `newyorkqueensstreet` photo to the Jamaica/Queens
+ * section, but that file was not among the supplied assets. Rather than
+ * substitute an unrelated interior shot, the local section is carried by the
+ * drawn street-grid system in components/viz/QueensLines.tsx. Drop a real
+ * neighborhood photo into assets/image, add it here, and swap the motif for a
+ * <Photo /> if one is ever supplied.
  */
 export const IMAGES = {
   homeHero: {
     src: bookkeeperWorkingLaptop,
-    alt: "Bookkeeper reviewing financial records on a laptop at a desk",
+    alt: "Accountant reviewing financial records on a laptop at a desk",
   },
   whoWeHelp: {
     src: smallBusinessOwnerOffice,
-    alt: "Small business owner going over paperwork in their office",
+    alt: "Business owner reviewing financial reporting in their office",
   },
   process: {
     src: accountantClientMeeting,
-    alt: "Accountant and client reviewing documents together across a desk",
+    alt: "Accountant and client reviewing financial reports together across a desk",
   },
   clientRelationship: {
     src: businessMeetingSmallBusiness,
-    alt: "Small business meeting in an office, documents open on the table",
+    alt: "Business meeting in an office with financial documents open on the table",
   },
   aboutPortrait: {
     src: accountantWorkingOffice,
@@ -45,34 +47,34 @@ export const IMAGES = {
   },
   aboutWorkspace: {
     src: womanWorkingLaptopOffice,
-    alt: "Bookkeeper working at a laptop beside organized files",
+    alt: "Accountant working at a laptop beside organized client files",
   },
   bookkeepingHero: {
     src: businessDocumentsDesk,
-    alt: "Business documents and folders organized on a desk",
+    alt: "Business records and folders organized on a desk",
   },
   bookkeepingDetail: {
     src: financialDocumentsDesk,
-    alt: "Financial statements and receipts laid out for reconciliation",
+    alt: "Financial statements laid out for reconciliation",
   },
   bookkeepingPaperwork: {
     src: accountingPaperworkOffice,
-    alt: "Accounting paperwork being sorted and categorized in an office",
+    alt: "Accounting records being sorted and categorized in an office",
   },
   taxHero: {
     src: calculatorDocumentsLaptop,
-    alt: "Calculator, tax documents and a laptop on a work desk",
+    alt: "Tax documents and reporting reviewed at a work desk",
   },
   taxDetail: {
     src: taxDocumentsAccountant,
-    alt: "Accountant reviewing tax documents before preparing a return",
+    alt: "Accountant reviewing tax documents before preparing a filing",
   },
   businessSupport: {
     src: professionalOfficeDeskLaptop,
-    alt: "Professional office desk set up with a laptop and business records",
+    alt: "Professional workspace with financial reporting open on a laptop",
   },
   individualSupport: {
     src: manWorkingLaptopOffice,
-    alt: "Person reviewing their personal tax paperwork on a laptop",
+    alt: "Business owner reviewing accounts on a laptop",
   },
 } as const;
