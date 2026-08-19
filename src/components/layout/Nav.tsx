@@ -76,7 +76,7 @@ export function Nav() {
               ))}
             </nav>
             <div style={{ display: "grid", gap: 10, paddingTop: 18 }}>
-              <Button href="/contact" block>
+              <Button   href="/contact" className="text-white" block>
                 Get Started
               </Button>
               <Button

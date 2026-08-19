@@ -232,7 +232,7 @@ export default function HomePage() {
       </section>
 
       {/* ── 08 — before and after ────────────────────────────────────────── */}
-      <section className="section section--warm" aria-labelledby="transform-h">
+      {/* <section className="section section--warm" aria-labelledby="transform-h">
         <div className="container">
           <SectionHead
             index="08"
@@ -244,7 +244,7 @@ export default function HomePage() {
             <ChaosOrder />
           </div>
         </div>
-      </section>
+      </section> */}
 
       <Proof />
       <LocalSection />
