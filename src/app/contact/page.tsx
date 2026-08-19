@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Icon, Photo, Reveal } from "@/components/ui";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { LocalSection } from "@/components/sections/Shared";
@@ -132,6 +133,19 @@ Tell us about your business and where your financial records stand. We will help
           </Reveal>
         </div>
       </section>
+
+      <div className="band">
+        <div className="band__figure" style={{ aspectRatio: "21/7" }}>
+          <Image
+            src={IMAGES.whoWeHelp.src}
+            alt="Business owner reviewing financial reporting in their office"
+            fill
+            sizes="100vw"
+            placeholder="blur"
+            style={{ objectFit: "cover", objectPosition: "center 45%" }}
+          />
+        </div>
+      </div>
 
       <LocalSection />
     </>

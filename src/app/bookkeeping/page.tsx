@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Accordion, Button, Icon, Photo, Reveal, Stagger, StaggerItem } from "@/components/ui";
 import { FinalCta } from "@/components/sections/Shared";
 import { ReconcileDiagram } from "@/components/viz/ReconcileDiagram";
@@ -134,6 +135,20 @@ export default function BookkeepingPage() {
           </div>
         </div>
       </section>
+
+      <div className="band">
+        <div className="band__figure">
+          <Image
+            src={IMAGES.bookkeepingHero.src}
+            alt={IMAGES.bookkeepingHero.alt}
+            fill
+            sizes="100vw"
+            priority
+            placeholder="blur"
+            style={{ objectFit: "cover", objectPosition: "center 40%" }}
+          />
+        </div>
+      </div>
 
       {/* The one idea the service rests on. */}
       <section className="section section--alt" aria-labelledby="rec-h">

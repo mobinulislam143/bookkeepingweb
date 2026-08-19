@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Accordion, Button, Icon, Reveal, type AccordionItem } from "@/components/ui";
 import { FinalCta } from "@/components/sections/Shared";
 import { BIZ } from "@/lib/business";
+import { IMAGES } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Frequently Asked Questions",
@@ -138,6 +140,19 @@ General answers about how we work and what the services cover. Anything specific
           </div>
         </div>
       </section>
+
+      <div className="band">
+        <div className="band__figure" style={{ aspectRatio: "21/7" }}>
+          <Image
+            src={IMAGES.taxDetail.src}
+            alt="Tax documents being prepared by an accountant"
+            fill
+            sizes="100vw"
+            placeholder="blur"
+            style={{ objectFit: "cover", objectPosition: "center 45%" }}
+          />
+        </div>
+      </div>
 
       {/* Index on the left, answers on the right. */}
       <section className="section" style={{ paddingTop: 0 }}>
