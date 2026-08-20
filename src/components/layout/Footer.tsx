@@ -87,7 +87,16 @@ export function Footer() {
 
         <div className="footer__bottom">
           <span>
-            © {new Date().getFullYear()} {BIZ.name}. {BIZ.cityLine}.
+            © {new Date().getFullYear()} Samadhan Accounting & Advisory. All rights reserved. Website designed and developed by{" "}
+            <Link
+              href="https://webxproai.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold hover:underline"
+            >
+              WebXPro AI
+            </Link>{" "}
+            — Founder, Mahi.
           </span>
           <span>Accounting · Bookkeeping · Tax · Reporting · Advisory</span>
         </div>
